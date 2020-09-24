@@ -31,10 +31,13 @@ init
 			version = "release";
 			break;
 		case 74993664:
-			version = "patch1-GOG";
+			version = "release-GOG";
 			break;
 		case 75321344:
 			version = "patch1-steam";
+			break;
+		case 75001856:
+			version = "patch1-GOG";
 			break;
 		default:
 			version = "unknown";
