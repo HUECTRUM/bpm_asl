@@ -86,6 +86,6 @@ split {
 }
 
 reset {
-	return  settings["resetOnRestart"] ? vars.pauseMenuRestart : false
+	return  (settings["resetOnRestart"] ? vars.pauseMenuRestart : false)
 			|| vars.exitToMainMenu;
 }
