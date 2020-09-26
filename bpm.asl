@@ -57,9 +57,6 @@ init
 }
 
 startup {
-	settings.Add("resetOnRestart", true, "Reset on pause menu restart.");
-	settings.SetToolTip("resetOnRestart", "Resets livesplit when restarting run from pause menu. On by default.");
-
 	vars.pauseMenuRestart = false;
 	vars.exitToMainMenu = false;
 }
@@ -86,6 +83,5 @@ split {
 }
 
 reset {
-	return  (settings["resetOnRestart"] ? vars.pauseMenuRestart : false)
-			|| vars.exitToMainMenu;
+	return  vars.pauseMenuRestart || vars.exitToMainMenu;
 }
