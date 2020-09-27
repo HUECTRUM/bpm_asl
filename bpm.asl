@@ -26,6 +26,7 @@ state("BPMGame-Win64-Shipping", "patch1-GOG")
 	float timer: 0x0435D768, 0xDE8, 0x1944;
 	int   world: 0x0435D738, 0x58, 0x1930;
 	int   menu:  0x0438E180, 0x368, 0x78, 0x68;
+	int   alive: 0x0438E160, 0x64;
 	//int   charSel: 0x043489B0, 0x1E8, 0x3A0, 0x288, 0x818;
 	//int   pause: 0x0435B3A8, 0x8B8;
 }
@@ -68,28 +69,37 @@ startup {
 }
 
 update {
-	vars.pauseMenuRestart = current.timer == 0.0f && old.timer != 0.0f;
+	// vars.pauseMenuRestart = current.timer == 0.0f && old.timer != 0.0f;
 	vars.exitToMainMenu = current.menu == 1 && old.menu == 0;
 
-	int state_machine_input = (current.timer < old.timer ? 0x8 : 0x0) | (current.timer > old.timer ? 0x4 : 0x0) | (current.timer == old.timer ? 0x2 : 0x0) | (current.timer == 0.0f ? 0x1 : 0x0);
+	bool t_eq_0 = current.timer == 0.0f;
+	bool t_eq_t0 = current.timer == old.timer;
+	bool t_gt_t0 = current.timer > old.timer;
+	bool t_lt_t0 = current.timer < old.timer;
 
-	switch(state_machine_input)
+	int state = vars.timerState;
+	switch(state)
 	{
-		case 0x2:
-			vars.timerState = 0x2;
+		case 0:	//stopped
+			if(t_gt_t0 && current.alive == 1)
+				vars.timerState = 1;
 			break;
-		case 0x3:
-			vars.timerState = 0x0;
+		case 1:	//running
+			if(t_eq_t0)
+				vars.timerState = 2;
+			else if((t_eq_0 && t_lt_t0) || current.alive == 0)
+				vars.timerState = 3;
 			break;
-		case 0x4:
-			vars.timerState = 0x1;
+		case 2:	//paused
+			if(t_gt_t0)
+				vars.timerState = 1;
+			else if((t_eq_0 && t_lt_t0) || vars.exitToMainMenu)
+				vars.timerState = 3;
 			break;
-		case 0x9:
-			vars.timerState = 0x3;
+		case 3:	//reset
+			vars.timerState = 0;
 			break;
-		default:
-			break;
-	} 
+	}
 }
 
 start {
