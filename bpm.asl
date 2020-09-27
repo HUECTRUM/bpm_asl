@@ -59,11 +59,37 @@ init
 startup {
 	vars.pauseMenuRestart = false;
 	vars.exitToMainMenu = false;
+	vars.timerValue = 0.0f;
+	vars.timerState = 0; //0b00 = stopped 0b01 = running 0b10 = paused 0b11 = reset
+
+	settings.Add("allChars", false, "All Characters Mode");
+
+	timer.OnReset += (s,e) => vars.timerValue = 0.0f;
 }
 
 update {
 	vars.pauseMenuRestart = current.timer == 0.0f && old.timer != 0.0f;
 	vars.exitToMainMenu = current.menu == 1 && old.menu == 0;
+
+	int state_machine_input = (current.timer < old.timer ? 0x8 : 0x0) | (current.timer > old.timer ? 0x4 : 0x0) | (current.timer == old.timer ? 0x2 : 0x0) | (current.timer == 0.0f ? 0x1 : 0x0);
+
+	switch(state_machine_input)
+	{
+		case 0x2:
+			vars.timerState = 0x2;
+			break;
+		case 0x3:
+			vars.timerState = 0x0;
+			break;
+		case 0x4:
+			vars.timerState = 0x1;
+			break;
+		case 0x9:
+			vars.timerState = 0x3;
+			break;
+		default:
+			break;
+	} 
 }
 
 start {
@@ -75,7 +101,30 @@ isLoading {
 }
 
 gameTime {
-	return TimeSpan.FromSeconds(current.timer);
+	float display_time = 0.0f;
+	int state = vars.timerState;
+	switch(state)
+	{
+		case 0x0: //stopped
+			if(settings["allChars"])
+				display_time = vars.timerValue;
+			else
+				display_time = current.timer;
+			break;
+		case 0x1: //running
+			display_time = vars.timerValue + current.timer;
+			break;
+		case 0x2: //paused
+			display_time = vars.timerValue + current.timer;
+			break;
+		case 0x3: //reset
+			if(settings["allChars"])
+				vars.timerValue += old.timer;
+			else
+				vars.timerValue = 0.0f;
+			break;
+	}
+	return TimeSpan.FromSeconds(display_time);
 }
 
 split {
@@ -83,5 +132,7 @@ split {
 }
 
 reset {
-	return  vars.pauseMenuRestart || vars.exitToMainMenu;
+	return  settings["allChars"] 
+				? false
+				: (vars.timerState == 0x3 ? true : false) /*|| vars.pauseMenuRestart || vars.exitToMainMenu*/;
 }
