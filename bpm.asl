@@ -56,6 +56,16 @@ init
 	print("VERSION: " + version);
 }
 
+startup {
+	vars.pauseMenuRestart = false;
+	vars.exitToMainMenu = false;
+}
+
+update {
+	vars.pauseMenuRestart = current.timer == 0.0f && old.timer != 0.0f;
+	vars.exitToMainMenu = current.menu == 1 && old.menu == 0;
+}
+
 start {
 	return current.world == 0 && Math.Abs(current.timer) > 1e-6 && Math.Abs(old.timer) < 1e-6;
 }
@@ -73,5 +83,5 @@ split {
 }
 
 reset {
-	return current.menu != 0 && old.menu == 0;
+	return  vars.pauseMenuRestart || vars.exitToMainMenu;
 }
