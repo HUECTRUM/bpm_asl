@@ -17,8 +17,6 @@ state("BPMGame-Win64-Shipping", "release-GOG")
 	float timer: 0x0435B378, 0x58, 0x1944;
 	int   world: 0x0435B3A8, 0xDE8, 0x1930;
 	int   menu:  0x0438BDC0, 0x368, 0xA8, 0x58;
-	//int   charSel: 0x043489B0, 0x1E8, 0x3A0, 0x288, 0x818;
-	//int   pause: 0x0435B3A8, 0x8B8;
 }
 
 state("BPMGame-Win64-Shipping", "patch1-GOG")
@@ -27,8 +25,6 @@ state("BPMGame-Win64-Shipping", "patch1-GOG")
 	int   world: 0x0435D738, 0x58, 0x1930;
 	int   menu:  0x0438E180, 0x368, 0x78, 0x68;
 	int   alive: 0x0438E160, 0x64;
-	//int   charSel: 0x043489B0, 0x1E8, 0x3A0, 0x288, 0x818;
-	//int   pause: 0x0435B3A8, 0x8B8;
 }
 
 init
@@ -58,10 +54,9 @@ init
 }
 
 startup {
-	vars.pauseMenuRestart = false;
 	vars.exitToMainMenu = false;
 	vars.timerValue = 0.0f;
-	vars.timerState = 0; //0b00 = stopped 0b01 = running 0b10 = paused 0b11 = reset
+	vars.timerState = 0;
 
 	settings.Add("allChars", false, "All Characters Mode");
 
@@ -69,7 +64,6 @@ startup {
 }
 
 update {
-	// vars.pauseMenuRestart = current.timer == 0.0f && old.timer != 0.0f;
 	vars.exitToMainMenu = current.menu == 1 && old.menu == 0;
 
 	bool t_eq_0 = current.timer == 0.0f;
@@ -115,19 +109,19 @@ gameTime {
 	int state = vars.timerState;
 	switch(state)
 	{
-		case 0x0: //stopped
+		case 0: //stopped
 			if(settings["allChars"])
 				display_time = vars.timerValue;
 			else
 				display_time = current.timer;
 			break;
-		case 0x1: //running
+		case 1: //running
 			display_time = vars.timerValue + current.timer;
 			break;
-		case 0x2: //paused
+		case 2: //paused
 			display_time = vars.timerValue + current.timer;
 			break;
-		case 0x3: //reset
+		case 3: //reset
 			if(settings["allChars"])
 				vars.timerValue += old.timer;
 			else
@@ -144,5 +138,5 @@ split {
 reset {
 	return  settings["allChars"] 
 				? false
-				: (vars.timerState == 0x3 ? true : false) /*|| vars.pauseMenuRestart || vars.exitToMainMenu*/;
+				: (vars.timerState == 0x3 ? true : false);
 }
