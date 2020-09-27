@@ -58,7 +58,7 @@ startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
-	settings.Add("allChars", false, "All Characters Mode");
+	settings.Add("allChars", false, "All Characters Mode. Auto-reset will be disabled.");
 
 	timer.OnReset += (s,e) => vars.timerValue = 0.0f;
 }
