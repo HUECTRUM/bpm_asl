@@ -57,50 +57,55 @@ init
 }
 
 startup {
-	vars.exitToMainMenu = false;
+	vars.split = false;
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
 	settings.Add("allChars", false, "All Characters Mode. Auto-reset will be disabled.");
+	settings.Add("worldSplit", true, "Split on level transition.");
 
 	timer.OnReset += (s,e) => vars.timerValue = 0.0f;
 }
 
 update {
-	vars.exitToMainMenu = current.menu == 1 && old.menu == 0;
-
+	
 	bool t_eq_0 = current.timer == 0.0f;
 	bool t_eq_t0 = current.timer == old.timer;
 	bool t_gt_t0 = current.timer > old.timer;
 	bool t_lt_t0 = current.timer < old.timer;
+	bool exit = current.menu == 1 && old.menu == 0;
+	bool nextWorld = current.world == old.world + 1;
+	bool gameStart = current.world == 0 && current.timer > 0.0f && old.timer == 0.0f;
+	bool gameEnd = current.world == 7 && current.alive == 1 && old.alive == 0;
 
 	int state = vars.timerState;
 	switch(state)
 	{
 		case 0:	//stopped
-			if(t_gt_t0 && current.alive == 1)
+			if(gameStart || (t_gt_t0 && current.alive == 1))
 				vars.timerState = 1;
 			break;
 		case 1:	//running
-			if(t_eq_t0)
+			if(t_eq_t0 && current.pause == 1)
 				vars.timerState = 2;
-			else if((t_eq_0 && t_lt_t0) || current.alive == 0)
+			else if((t_eq_0 && t_lt_t0) || (current.menu == 1 && current.alive == 0))
 				vars.timerState = 3;
 			break;
 		case 2:	//paused
 			if(t_gt_t0)
 				vars.timerState = 1;
-			else if((t_eq_0 && t_lt_t0) || vars.exitToMainMenu)
+			else if((t_eq_0 && t_lt_t0) || exit)
 				vars.timerState = 3;
 			break;
 		case 3:	//reset
 			vars.timerState = 0;
 			break;
 	}
+	vars.split = (settings["worldSplit"] ? nextWorld : false) || gameEnd;
 }
 
 start {
-	return current.world == 0 && Math.Abs(current.timer) > 1e-6 && Math.Abs(old.timer) < 1e-6;
+	return current.world == 0 && current.timer > 0.0f && old.timer == 0.0f;
 }
 
 isLoading {
@@ -135,11 +140,11 @@ gameTime {
 }
 
 split {
-	return (current.world == old.world + 1) || (current.world == 0 && old.world == 7 && current.menu == 0);
+	return vars.split;
 }
 
 reset {
 	return  settings["allChars"] 
 				? false
-				: (vars.timerState == 0x3 ? true : false);
+				: vars.timerState == 3;
 }
