@@ -8,6 +8,7 @@ state("BPMGame-Win64-Shipping", "release")
 state("BPMGame-Win64-Shipping", "patch1-steam")
 {
 	float timer: 0x43A7C78, 0x58, 0x1944;
+	float death: 0x43952B0, 0x30, 0x50, 0x2B0, 0x370, 0x288, 0x160;
 	int   world: 0x43952B0, 0x268, 0x368;
 	int   menu:  0x43D86C0, 0x328, 0x108, 0x58;
 	int   pause: 0x043AB330, 0x128, 0x2B8;
@@ -24,6 +25,7 @@ state("BPMGame-Win64-Shipping", "release-GOG")
 state("BPMGame-Win64-Shipping", "patch1-GOG")
 {
 	float timer: 0x0435D768, 0xDE8, 0x1944;
+	float death: 0x0434AD70, 0x30, 0x2B0, 0x370, 0x288, 0x160;
 	int   world: 0x0435D738, 0x58, 0x1930;
 	int   menu:  0x0438E180, 0x368, 0x78, 0x68;
 	int   pause: 0x04360DF0, 0x128, 0x2B8;
@@ -75,8 +77,9 @@ update {
 	bool t_lt_t0 = current.timer < old.timer;
 	bool exit = current.menu == 1 && old.menu == 0;
 	bool nextWorld = current.world == old.world + 1;
-	bool gameStart = current.world == 0 && current.timer > 0.0f && old.timer == 0.0f;
+	bool gameStart = current.timer > 0.0f && old.timer == 0.0f;
 	bool gameEnd = current.world == 7 && current.alive == 1 && old.alive == 0;
+	bool death = current.death > 0.0f && old.death == 0.0f;
 
 	int state = vars.timerState;
 	switch(state)
@@ -88,7 +91,7 @@ update {
 		case 1:	//running
 			if(t_eq_t0 && current.pause == 1)
 				vars.timerState = 2;
-			else if((t_eq_0 && t_lt_t0) || (current.menu == 1 && current.alive == 0))
+			else if((t_eq_0 && t_lt_t0) || death)
 				vars.timerState = 3;
 			break;
 		case 2:	//paused
@@ -105,7 +108,7 @@ update {
 }
 
 start {
-	return current.world == 0 && current.timer > 0.0f && old.timer == 0.0f;
+	return current.timer > 0.0f && old.timer == 0.0f;
 }
 
 isLoading {
@@ -131,9 +134,10 @@ gameTime {
 			break;
 		case 3: //reset
 			if(settings["allChars"])
-				vars.timerValue += old.timer;
+				vars.timerValue += current.death == 0.0f ? old.timer : current.death;
 			else
 				vars.timerValue = 0.0f;
+			display_time = vars.timerValue;
 			break;
 	}
 	return TimeSpan.FromSeconds(display_time);
