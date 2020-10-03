@@ -64,7 +64,7 @@ startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
-	settings.Add("allChars", false, "All Characters Mode. Auto-reset will be disabled after first character.");
+	settings.Add("allChars", false, "All Characters Mode. Auto-reset will be disabled.");
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
 	settings.Add("worldSplit", true, "Split on level transition.");
 
