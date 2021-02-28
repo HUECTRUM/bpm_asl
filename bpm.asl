@@ -30,16 +30,32 @@ state("BPMGame-Win64-Shipping", "GOG-patch1")
 	int   finale: 0x042D5938, 0x20, 0x240, 0x758, 0x4DC;
 }
 
+state("BPMGame-Win64-Shipping", "GOG-patch2")
+{
+	float timer: 0x04374928, 0xDE8, 0x2D5C;
+	float death: 0x04361F30, 0x30, 0x2B0, 0x370, 0x288, 0x1C8;
+	int   world: 0x04361F30, 0x268, 0x3B0;
+	int   menu:  0x043A6708, 0x38, 0x138;
+	int   pause: 0x04374928, 0x8B8;
+	int   finale: 0x04377FB0, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
+	int   boss: 0x04374928, 0xDE8, 0x2E80;
+}
 
 init
 {
+	print("Size: " + modules.First().ModuleMemorySize);
 	var versions = new Dictionary<int, string>() {
-                {75317248, "steam-release"}, {75321344, "steam-patch1"},
-		{74993664, "GOG-release"}, {75001856, "GOG-patch1"},
+			{75317248, "steam-release"}, 
+			{75321344, "steam-patch1"},
+			{74993664, "GOG-release"},
+			{75001856, "GOG-patch1"},
+			{75096064, "GOG-patch2"}
+
         };
 	
 	version = versions[modules.First().ModuleMemorySize];
 	print("VERSION: " + version);
+	refreshRate = 30; //for load reduction
 }
 
 startup {	
@@ -50,7 +66,10 @@ startup {
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
 	settings.Add("worldSplit", true, "Split on level transition.");
 
-	timer.OnReset += (s,e) => vars.timerValue = 0.0f;
+	timer.OnReset += (s,e) => {
+		vars.timerValue = 0.0f;
+		vars.timerState = 0;
+	};
 }
 
 update {
@@ -65,6 +84,7 @@ update {
 	bool death = current.death > 0.0f && old.death == 0.0f;
 
 	bool start = current.timer > 0.0f && old.timer == 0.0f;
+	bool paused = current.pause == 1;
 	bool exit = current.menu == 1 && old.menu == 0;
 	
 	Func<int, int> transitions = (timerState) => {
@@ -73,7 +93,7 @@ update {
 			case STOPPED:
 				return (start || (t_gt_t0 && alive)) ? RUNNING : STOPPED;
 			case RUNNING:
-				if (t_eq_t0) return PAUSED;
+				if (paused || t_eq_t0) return PAUSED;
 				return ((t_eq_0 && t_lt_t0) || death) ? RESET : RUNNING;
 			case PAUSED:
 				if (t_gt_t0) return RUNNING;
@@ -83,7 +103,7 @@ update {
 		}
 	};
 	vars.timerState = transitions(vars.timerState);
-	
+	print("Timer State: " + vars.timerState);
 	if (vars.timerState == RESET) {
 		vars.timerValue = settings["allChars"]
 			? vars.timerValue + (alive ? old.timer : current.death)
