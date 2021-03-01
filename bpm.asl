@@ -43,7 +43,7 @@ state("BPMGame-Win64-Shipping", "GOG-patch2")
 
 init
 {
-	print("Size: " + modules.First().ModuleMemorySize);
+	// print("Size: " + modules.First().ModuleMemorySize);
 	var versions = new Dictionary<int, string>() {
 			{75317248, "steam-release"}, 
 			{75321344, "steam-patch1"},
@@ -54,7 +54,7 @@ init
         };
 	
 	version = versions[modules.First().ModuleMemorySize];
-	print("VERSION: " + version);
+	// print("VERSION: " + version);
 	refreshRate = 30; //for load reduction
 }
 
@@ -74,6 +74,7 @@ startup {
 
 update {
 	const int STOPPED = 0, RUNNING = 1, PAUSED = 2, RESET = 3;
+	string[] STATE = {"STOPPED", "RUNNING", "PAUSED", "RESET"};
 	
 	bool t_eq_0 = current.timer == 0.0f;
 	bool t_eq_t0 = current.timer == old.timer;
@@ -102,8 +103,10 @@ update {
 				return STOPPED;
 		}
 	};
+	int prevState = vars.timerState;
 	vars.timerState = transitions(vars.timerState);
-	print("Timer State: " + vars.timerState);
+	if(prevState != vars.timerState)
+		print("Timer State: " + STATE[vars.timerState]);
 	if (vars.timerState == RESET) {
 		vars.timerValue = settings["allChars"]
 			? vars.timerValue + (alive ? old.timer : current.death)
@@ -140,10 +143,10 @@ gameTime {
 split {
 	bool nidhogg = version.StartsWith("steam") 
 		? (current.world == 0 && old.world == 7 && current.menu == 0)
-		: (current.world == 7 && current.finale == 9 && old.finale == 8) ;
+		: (current.finale == 9 && old.finale == 8);
 	
 	return (settings["worldSplit"] && current.world == old.world + 1) 
-		|| (settings["bossMode"] && current.finale == 5 && old.finale == 4) 
+		|| (settings["bossMode"] && current.boss == old.boss + 1) 
 		|| nidhogg;
 }
 
