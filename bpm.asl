@@ -11,7 +11,18 @@ state("BPMGame-Win64-Shipping", "steam-patch1")
 	float death: 0x43952B0, 0x30, 0x50, 0x2B0, 0x370, 0x288, 0x160;
 	int   world: 0x43952B0, 0x268, 0x368;
 	int   menu:  0x43D86C0, 0x328, 0x108, 0x58;
-	int   finale: 0x0431FE68, 0x40, 0x240, 0x758, 0x4DC;
+	int   finisher: 0x0431FE68, 0x40, 0x240, 0x758, 0x4DC;
+}
+
+state("BPMGame-Win64-Shipping", "steam-patch2")
+{
+	float timer: 0x043BEEE8, 0xDE8, 0x2D5C;
+	float death: 0x043AC4F0,  0x30, 0x2B0, 0x370, 0x288, 0x1C8;
+	int   world: 0x043AC4F0, 0x268, 0x3B0;
+	int   menu:  0x043F0CC8, 0x38, 0x138;
+	int   finisher: 0x043C2570, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
+	int   pause: 0x043BEEE8, 0x8B8;
+	int   boss: 0x043BEEE8, 0xDE8, 0x2E80;
 }
 
 state("BPMGame-Win64-Shipping", "GOG-release")
@@ -27,7 +38,7 @@ state("BPMGame-Win64-Shipping", "GOG-patch1")
 	float death: 0x0434AD70, 0x30, 0x2B0, 0x370, 0x288, 0x160;
 	int   world: 0x0435D738, 0x58, 0x1930;
 	int   menu:  0x0438E180, 0x368, 0x78, 0x68;
-	int   finale: 0x042D5938, 0x20, 0x240, 0x758, 0x4DC;
+	int   finisher: 0x042D5938, 0x20, 0x240, 0x758, 0x4DC;
 }
 
 state("BPMGame-Win64-Shipping", "GOG-patch2")
@@ -37,7 +48,7 @@ state("BPMGame-Win64-Shipping", "GOG-patch2")
 	int   world: 0x04361F30, 0x268, 0x3B0;
 	int   menu:  0x043A6708, 0x38, 0x138;
 	int   pause: 0x04374928, 0x8B8;
-	int   finale: 0x04377FB0, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
+	int   finisher: 0x04377FB0, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
 	int   boss: 0x04374928, 0xDE8, 0x2E80;
 }
 
@@ -47,10 +58,10 @@ init
 	var versions = new Dictionary<int, string>() {
 			{75317248, "steam-release"}, 
 			{75321344, "steam-patch1"},
+			{75427840, "steam-patch2"},
 			{74993664, "GOG-release"},
 			{75001856, "GOG-patch1"},
 			{75096064, "GOG-patch2"}
-
         };
 	
 	version = versions[modules.First().ModuleMemorySize];
@@ -62,7 +73,7 @@ startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
-	settings.Add("allChars", false, "All Characters Mode. Auto-reset will be disabled.");
+	settings.Add("allChars", false, "Multi-Character Mode. Auto-reset will be disabled.");
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
 	settings.Add("worldSplit", true, "Split on level transition.");
 
@@ -140,14 +151,10 @@ gameTime {
 	return TimeSpan.FromSeconds(stateToSeconds(vars.timerState));
 }
 
-split {
-	bool nidhogg = version.StartsWith("steam") 
-		? (current.world == 0 && old.world == 7 && current.menu == 0)
-		: (current.finale == 9 && old.finale == 8);
-	
+split {	
 	return (settings["worldSplit"] && current.world == old.world + 1) 
 		|| (settings["bossMode"] && current.boss == old.boss + 1) 
-		|| nidhogg;
+		|| (current.finisher == 9 && old.finisher == 8); //consolidated nidhogg split methods
 }
 
 reset {
