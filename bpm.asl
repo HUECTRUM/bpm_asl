@@ -54,7 +54,7 @@ state("BPMGame-Win64-Shipping", "GOG-patch2")
 
 init
 {
-	// print("Size: " + modules.First().ModuleMemorySize);
+	print("Size: " + modules.First().ModuleMemorySize);
 	var versions = new Dictionary<int, string>() {
 			{75317248, "steam-release"}, 
 			{75321344, "steam-patch1"},
@@ -65,7 +65,7 @@ init
         };
 	
 	version = versions[modules.First().ModuleMemorySize];
-	// print("VERSION: " + version);
+	print("VERSION: " + version);
 	refreshRate = 30; //for load reduction
 }
 
@@ -73,9 +73,12 @@ startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
+	settings.Add("worldSplit", true, "Split on level transition."); //moved to top since this defaults to true
 	settings.Add("allChars", false, "Multi-Character Mode. Auto-reset will be disabled.");
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
-	settings.Add("worldSplit", true, "Split on level transition.");
+	settings.Add("rta", false, "RTA Loadless timing.");
+
+	settings.SetToolTip("bossMode", "WARNING: Cloned bosses result in double splits.");
 
 	timer.OnReset += (s,e) => {
 		vars.timerValue = 0.0f;
@@ -97,7 +100,7 @@ update {
 
 	bool start = current.timer > 0.0f && old.timer == 0.0f;
 	bool paused = current.pause == 1;
-	bool exit = current.menu == 1 && old.menu == 0;
+	bool mainmenu = current.menu == 1;
 	
 	Func<int, int> transitions = (timerState) => {
 		switch(timerState)
@@ -109,7 +112,7 @@ update {
 				return ((t_eq_0 && t_lt_t0) || death) ? RESET : RUNNING;
 			case PAUSED:
 				if (t_gt_t0) return RUNNING;
-				return ((t_eq_0 && t_lt_t0) || exit) ? RESET : PAUSED;
+				return ((t_eq_0 && t_lt_t0) || mainmenu) ? RESET : PAUSED;
 			default:
 				return STOPPED;
 		}
@@ -118,7 +121,7 @@ update {
 	vars.timerState = transitions(vars.timerState);
 	if(prevState != vars.timerState)
 		print("Timer State: " + STATE[vars.timerState]);
-	if (vars.timerState == RESET) {
+	if (vars.timerState == RESET && !settings["rta"]) {
 		vars.timerValue = settings["allChars"]
 			? vars.timerValue + (alive ? old.timer : current.death)
 			: 0.0f;
@@ -126,34 +129,39 @@ update {
 }
 
 start {
-	return current.timer > 0.0f && old.timer == 0.0f;
+	return vars.timerState == 1;
 }
 
 isLoading {
-	return true;
+	 //remove loads from RTA
+	return settings["rta"] 
+		? (vars.timerState == 0 || vars.timerState == 3 || (vars.timerState == 2 && current.pause == 0))
+		: true;
 }
 
 gameTime {
-	const int STOPPED = 0, RUNNING = 1, PAUSED = 2, RESET = 3;
-	
-	Func<int, double> stateToSeconds = (timerState) => {
-		switch(timerState)
-		{
-			case STOPPED:
-				return settings["allChars"] ? vars.timerValue : current.timer;
-			case RESET:
-				return vars.timerValue;
-			default:
-				return vars.timerValue + current.timer;
-		}
-	};
-	
-	return TimeSpan.FromSeconds(stateToSeconds(vars.timerState));
+	if(!settings["rta"]) {
+		const int STOPPED = 0, RUNNING = 1, PAUSED = 2, RESET = 3;
+		
+		Func<int, double> stateToSeconds = (timerState) => {
+			switch(timerState)
+			{
+				case STOPPED:
+					return settings["allChars"] ? vars.timerValue : current.timer;
+				case RESET:
+					return vars.timerValue;
+				default:
+					return vars.timerValue + current.timer;
+			}
+		};
+		
+		return TimeSpan.FromSeconds(stateToSeconds(vars.timerState));
+	}
 }
 
 split {	
-	return (settings["worldSplit"] && current.world == old.world + 1) 
-		|| (settings["bossMode"] && current.boss == old.boss + 1) 
+	return (settings["worldSplit"] && current.world == old.world + 1)
+		|| (settings["bossMode"] && current.boss == old.boss + 1)
 		|| (current.finisher == 9 && old.finisher == 8); //consolidated nidhogg split methods
 }
 
