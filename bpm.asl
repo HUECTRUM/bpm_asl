@@ -106,7 +106,7 @@ update {
 		switch(timerState)
 		{
 			case STOPPED:
-				return (start || (t_gt_t0 && alive)) ? RUNNING : STOPPED;
+				return (start && alive) ? RUNNING : STOPPED;
 			case RUNNING:
 				if (paused || t_eq_t0) return PAUSED;
 				return ((t_eq_0 && t_lt_t0) || death) ? RESET : RUNNING;
