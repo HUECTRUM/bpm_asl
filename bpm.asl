@@ -23,6 +23,7 @@ state("BPMGame-Win64-Shipping", "steam-patch2")
 	int   finisher: 0x043C2570, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
 	int   pause: 0x043BEEE8, 0x8B8;
 	int   boss: 0x043BEEE8, 0xDE8, 0x2E80;
+	float bosshp: 0x043C2570, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;
 }
 
 state("BPMGame-Win64-Shipping", "GOG-release")
@@ -50,6 +51,7 @@ state("BPMGame-Win64-Shipping", "GOG-patch2")
 	int   pause: 0x04374928, 0x8B8;
 	int   finisher: 0x04377FB0, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
 	int   boss: 0x04374928, 0xDE8, 0x2E80;
+	float bosshp: 0x04377FB0, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;
 }
 
 init
@@ -161,7 +163,7 @@ gameTime {
 
 split {	
 	return (settings["worldSplit"] && current.world == old.world + 1)
-		|| (settings["bossMode"] && current.boss == old.boss + 1)
+		|| (settings["bossMode"] && current.boss == old.boss + 1 && current.bosshp <= 0)
 		|| (current.finisher == 9 && old.finisher == 8); //consolidated nidhogg split methods
 }
 
