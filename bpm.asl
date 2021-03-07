@@ -80,8 +80,6 @@ startup {
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
 	settings.Add("rta", false, "RTA Loadless timing.");
 
-	settings.SetToolTip("bossMode", "WARNING: Cloned bosses result in double splits.");
-
 	timer.OnReset += (s,e) => {
 		vars.timerValue = 0.0f;
 		vars.timerState = 0;
