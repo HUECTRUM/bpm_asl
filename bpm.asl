@@ -120,14 +120,15 @@ update {
 				return STOPPED;
 		}
 	};
-	int prevState = vars.timerState;
-	vars.timerState = nextState(vars.timerState);
-	if(prevState != vars.timerState)
-		print("Timer State: " + STATE[vars.timerState]);
-	if (vars.timerState == RESET && !settings["rta"]) {
-		vars.timerValue = settings["allChars"]
+	Func<double> resetTimer = () => settings["allChars"] 
+			&& timer.CurrentSplitIndex > (settings["worldSplit"] ? 7 : 0) 
 			? vars.timerValue + (alive ? old.timer : current.death)
 			: 0.0f;
+
+	MAIN: {	
+		vars.timerState = nextState(vars.timerState);
+		if(vars.timerState == RESET && !settings["rta"]) 
+			vars.timerValue = resetTimer();
 	}
 }
 
