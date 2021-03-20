@@ -171,5 +171,6 @@ split {
 
 reset {
 	const int RESET = 8;
-	return !settings["allChars"] && vars.timerState == RESET;
+	return !(settings["allChars"] && timer.CurrentSplitIndex > (settings["worldSplit"] ?  7 : 0)) //check if not on first character
+			&& vars.timerState == RESET;
 }
