@@ -79,7 +79,16 @@ startup {
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
 	settings.Add("practice", false, "Practice Difficulty Mode. Splits on Gullveig death.");
 	settings.Add("allChars", false, "Multi-Character Mode. Auto-reset is disabled after the first character.");
-	settings.Add("rta", false, "RTA Loadless timing.");
+	settings.Add("experimental", false, "Experimental options. ONLY FOR TESTING PURPOSES.");
+	settings.Add("altTiming", false, "Switch to an alternate timing method.", "experimental");
+	settings.Add("rta", false, "RTA Loadless timing.", "altTiming");
+	settings.Add("refreshRate", false, "Set a custom refresh rate. Default is 30hz to reduce lag.", "experimental");
+	settings.SetToolTip("refreshRate", "Keep this at or below your framerate." 
+									+ "\nWARNING: HIGHER REFRESH RATES MAY CAUSE LAG AND STUTTERING.");
+	settings.Add("60hz", false, null, "refreshRate");
+	settings.Add("120hz", false, null, "refreshRate");
+	settings.Add("144hz", false, null, "refreshRate");
+	settings.Add("200hz", false, null, "refreshRate");
 
 	timer.OnReset += (s,e) => {
 		vars.timerValue = 0.0f;
@@ -124,11 +133,18 @@ update {
 			&& timer.CurrentSplitIndex > (settings["worldSplit"] ? 7 : 0) 
 			? vars.timerValue + (alive ? old.timer : current.death)
 			: 0.0f;
+	Func<double> updateRefreshRate = () => settings["60hz"] ? 60
+				: settings["120hz"] ? 120
+				: settings["144hz"] ? 144
+				: settings["200hz"] ? 200
+				: 30;
 
 	MAIN: {	
 		vars.timerState = nextState(vars.timerState);
 		if(vars.timerState == RESET && !settings["rta"]) 
 			vars.timerValue = resetTimer();
+		if(vars.timerState == STOPPED)
+			refreshRate = updateRefreshRate();
 	}
 }
 
