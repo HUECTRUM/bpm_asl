@@ -134,8 +134,8 @@ update {
 				return STOPPED;
 		}
 	};
-	Func<double> resetTimer = () => settings["allChars"] 
-			&& timer.CurrentSplitIndex > (settings["worldSplit"] ? 7 : 0) 
+	Func<double> resetTimer = () => settings["allChars"]
+			&& timer.CurrentSplitIndex > (settings["worldSplit"] ? settings["practice"] ? 3 : 7 : 0) 
 			? vars.timerValue + (alive ? old.timer : current.death)
 			: 0.0f;
 	Func<double> updateRefreshRate = () => settings["60hz"] ? 60
@@ -241,6 +241,7 @@ split {
 
 reset {
 	const int RESET = 8;
-	return !(settings["allChars"] && timer.CurrentSplitIndex > (settings["worldSplit"] ?  7 : 0)) //check if not on first character
+	return !(settings["allChars"] && timer.CurrentSplitIndex //check if not on first character
+				> (settings["worldSplit"] ? settings["practice"] ? 3 : 7 : 0))
 			&& vars.timerState == RESET;
 }
