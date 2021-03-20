@@ -87,8 +87,10 @@ startup {
 }
 
 update {
-	const int STOPPED = 0, RUNNING = 1, PAUSED = 2, RESET = 3;
-	string[] STATE = {"STOPPED", "RUNNING", "PAUSED", "RESET"};
+	const int STOPPED = 1, RUNNING = 2, PAUSED = 4, RESET = 8;
+	string[] STATE = {"INITIAL","STOPPED", "RUNNING","3","PAUSED","5","6","7","RESET"};
+	string[] WORLD = {"ASGARD_I", "ASGARD_II_OR_CRYPTS", "VANAHEIM_I", "VANAHEIM_II",
+						"SVARTALFHEIM_I","SVARTALFHEIM_II","HELHEIM_I","HELHEIM_II"};
 	
 	bool t_eq_0 = current.timer == 0.0f;
 	bool t_eq_t0 = current.timer == old.timer;
@@ -102,7 +104,7 @@ update {
 	bool paused = current.pause == 1;
 	bool mainmenu = current.menu == 1;
 	
-	Func<int, int> transitions = (timerState) => {
+	Func<int, int> nextState = (timerState) => {
 		switch(timerState)
 		{
 			case STOPPED:
@@ -118,7 +120,7 @@ update {
 		}
 	};
 	int prevState = vars.timerState;
-	vars.timerState = transitions(vars.timerState);
+	vars.timerState = nextState(vars.timerState);
 	if(prevState != vars.timerState)
 		print("Timer State: " + STATE[vars.timerState]);
 	if (vars.timerState == RESET && !settings["rta"]) {
@@ -129,19 +131,21 @@ update {
 }
 
 start {
-	return vars.timerState == 1;
+	const int RUNNING = 2;
+	return vars.timerState == RUNNING;
 }
 
 isLoading {
-	 //remove loads from RTA
+	const int STOPPED = 1, PAUSED = 4, RESET = 8;
+	//remove loads from RTA
 	return settings["rta"] 
-		? (vars.timerState == 0 || vars.timerState == 3 || (vars.timerState == 2 && current.pause == 0))
+		? ((vars.timerState & (STOPPED | PAUSED | RESET)) != 0 && current.pause == 0)
 		: true;
 }
 
 gameTime {
 	if(!settings["rta"]) {
-		const int STOPPED = 0, RUNNING = 1, PAUSED = 2, RESET = 3;
+		const int STOPPED = 1, RESET = 8;
 		
 		Func<int, double> stateToSeconds = (timerState) => {
 			switch(timerState)
@@ -166,5 +170,6 @@ split {
 }
 
 reset {
-	return !settings["allChars"] && vars.timerState == 3;
+	const int RESET = 8;
+	return !settings["allChars"] && vars.timerState == RESET;
 }
