@@ -89,6 +89,11 @@ startup {
 	settings.Add("120hz", false, null, "refreshRate");
 	settings.Add("144hz", false, null, "refreshRate");
 	settings.Add("200hz", false, null, "refreshRate");
+	settings.Add("debug", false, "Enable debugging options.");
+	settings.Add("logger", false, "Enable logging to console.", "debug");
+	settings.Add("logvars", false, "Log variable changes to console.", "logger");
+	settings.Add("logstate", false, "Log state value changes to console.", "logger");
+	settings.Add("logtime", false, "Log current game time(on state change) to console.", "logger");
 
 	timer.OnReset += (s,e) => {
 		vars.timerValue = 0.0f;
@@ -139,12 +144,54 @@ update {
 				: settings["200hz"] ? 200
 				: 30;
 
+	int prevState = vars.timerState;
+	double prevRefresh = refreshRate;
+	double prevTimer = vars.timerValue;
+
 	MAIN: {	
 		vars.timerState = nextState(vars.timerState);
 		if(vars.timerState == RESET && !settings["rta"]) 
 			vars.timerValue = resetTimer();
 		if(vars.timerState == STOPPED)
 			refreshRate = updateRefreshRate();
+	}
+	
+	LOGGER: {
+		if(settings["logvars"]) {
+			//logging for debuging
+			if(prevState != vars.timerState)
+				print("Timer State: " + STATE[vars.timerState]);
+			if(prevRefresh != refreshRate)
+				print("Refresh Rate: " + refreshRate + "hz");
+			if(prevTimer != vars.timerValue)
+				print("Game Time: " + TimeSpan.FromSeconds(vars.timerValue).ToString());
+		}
+
+		if(settings["logstate"]) {
+			if(old.death != current.death)
+				print("Death Time: " + current.death);
+			if(old.world != current.world)
+				print("Current World: " + WORLD[current.world]);
+			if(old.menu != current.menu)
+				print("Menu: " + current.menu);
+			if(old.pause != current.pause)
+				print("Pause: " + current.pause);
+			if(old.finisher != current.finisher)
+				print("Finisher Shot: " + current.finisher);
+			if(old.boss != current.boss)
+				print("Boss Count: " + current.boss);
+			if(old.bosshp != current.bosshp)
+				print("Boss HP Bar: " + current.bosshp + "%");
+		}
+
+		if(settings["logtime"]) {
+			if((prevState != PAUSED && vars.timerState == PAUSED) 
+				|| (prevState != STOPPED && vars.timerState == STOPPED)
+				|| (prevState != RESET && vars.timerState == RESET)
+				|| (prevState != RUNNING && vars.timerState == RUNNING))
+				print("Current Time: " 
+					+ TimeSpan.FromSeconds(current.death > 0.0f ? current.death : current.timer).ToString());
+		}
 	}
 }
 
