@@ -95,15 +95,15 @@ startup {
 	settings.Add("logstate", false, "Log state value changes to console.", "logger");
 	settings.Add("logtime", false, "Log current game time(on state change) to console.", "logger");
 
-	timer.OnReset += (s,e) => {
+	timer.OnReset += (s,e) => { //needed for manual restarts, no way to remove anonymous event handlers on script shutdown, so this isn't ideal
 		vars.timerValue = 0.0f;
 		vars.timerState = 0;
 	};
 }
 
 update {
-	const int STOPPED = 1, RUNNING = 2, PAUSED = 4, RESET = 8;
-	string[] STATE = {"INITIAL","STOPPED", "RUNNING","3","PAUSED","5","6","7","RESET"};
+	const int STOPPED = 1, RUNNING = 2, PAUSED = 4, RESET = 8; //each bit as a state allows for bitmasking
+	string[] STATE = {"INITIAL","STOPPED", "RUNNING","3","PAUSED","5","6","7","RESET"}; //for logger
 	string[] WORLD = {"ASGARD_I", "ASGARD_II_OR_CRYPTS", "VANAHEIM_I", "VANAHEIM_II",
 						"SVARTALFHEIM_I","SVARTALFHEIM_II","HELHEIM_I","HELHEIM_II"};
 	
