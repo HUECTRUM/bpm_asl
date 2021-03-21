@@ -75,10 +75,10 @@ startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
-	settings.Add("worldSplit", true, "Split on level transition."); //moved to top since this defaults to true
+	// settings.Add("worldSplit", true, "Split on level transition."); //moved to top since this defaults to true
+	settings.Add("allChars", false, "Multi-Character Mode. Auto-reset is disabled after the first character.");
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
 	settings.Add("practice", false, "Practice Difficulty Mode. Splits on Gullveig death.");
-	settings.Add("allChars", false, "Multi-Character Mode. Auto-reset is disabled after the first character.");
 	settings.Add("experimental", false, "Experimental options. ONLY FOR TESTING PURPOSES.");
 	settings.Add("altTiming", false, "Switch to an alternate timing method.", "experimental");
 	settings.Add("rta", false, "RTA Loadless timing.", "altTiming");
@@ -134,8 +134,7 @@ update {
 				return STOPPED;
 		}
 	};
-	Func<double> resetTimer = () => settings["allChars"]
-			&& timer.CurrentSplitIndex > (settings["worldSplit"] ? settings["practice"] ? 3 : 7 : 0) 
+	Func<double> resetTimer = () => (settings["allChars"] && timer.CurrentSplitIndex > 0)
 			? vars.timerValue + (alive ? old.timer : current.death)
 			: 0.0f;
 	Func<double> updateRefreshRate = () => settings["60hz"] ? 60
@@ -233,7 +232,7 @@ split {
 	const int GULLVEIG = 5, NIDHOGG = 9;
 	Func<int, bool> isFinalShot = (shot) => current.finisher == shot && old.finisher == --shot;
 
-	return (settings["worldSplit"] && current.world == ++old.world)
+	return (!settings["allChars"] && current.world == ++old.world)
 		|| (settings["bossMode"] && current.boss == ++old.boss && current.bosshp <= 0)
 		|| (old.world == (settings["practice"] ? VANAHEIM_II : HELHEIM_II)
 			&& isFinalShot(settings["practice"] ? GULLVEIG : NIDHOGG));	//updated to check for world and practice difficulty
@@ -241,7 +240,6 @@ split {
 
 reset {
 	const int RESET = 8;
-	return !(settings["allChars"] && timer.CurrentSplitIndex //check if not on first character
-				> (settings["worldSplit"] ? settings["practice"] ? 3 : 7 : 0))
+	return !(settings["allChars"] && timer.CurrentSplitIndex > 0) //check if not on first character
 			&& vars.timerState == RESET;
 }
