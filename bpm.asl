@@ -228,14 +228,14 @@ gameTime {
 }
 
 split {	
-	const int HELHEIM_II = 7, VANAHEIM_II = 3;
+	const int VANAHEIM_II = 3;
 	const int GULLVEIG = 5, NIDHOGG = 9;
 	Func<int, bool> isFinalShot = (shot) => current.finisher == shot && old.finisher == --shot;
 
-	return (!settings["allChars"] && current.world == ++old.world)
-		|| (settings["bossMode"] && current.boss == ++old.boss && current.bosshp <= 0)
-		|| (old.world == (settings["practice"] ? VANAHEIM_II : HELHEIM_II)
-			&& isFinalShot(settings["practice"] ? GULLVEIG : NIDHOGG));	//updated to check for world and practice difficulty
+	return (!settings["allChars"] && current.world == ++old.world)	//removed "worldSplit" option and made it default behavior if multi-character mode is disabled
+		|| (settings["bossMode"] && current.boss == ++old.boss && current.bosshp <= 0)	//bosshp is the health bar value, otherwise the boss counter increments on cloned bosses
+		|| (settings["practice"] && old.world == VANAHEIM_II && isFinalShot(GULLVEIG))	//checking for vanaheim 2 on practice difficulty works
+		|| isFinalShot(NIDHOGG);	//checking for helheim 2 is unreliable, nidhogg is the only boss whose finisher is 9 shots
 }
 
 reset {
