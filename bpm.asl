@@ -79,9 +79,9 @@ init
 			case 75321344: return "steam-patch1";
 			case 75427840: return "steam-patch2";
 			case 81747968: return "steam-patch3";
-			case 74993664: return "gog-release";
-			case 75001856: return "gog-patch1";
-			case 75096064: return "gog-patch2";
+			case 74993664: return "GOG-release";
+			case 75001856: return "GOG-patch1";
+			case 75096064: return "GOG-patch2";
 			default: return "UNSUPPORTED";
 		}
 	};
