@@ -54,19 +54,40 @@ state("BPMGame-Win64-Shipping", "GOG-patch2")
 	float bosshp: 	0x4377FB0, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;
 }
 
+state("BPMGame-Win64-Shipping", "steam-patch3")
+{
+	float timer: 	0x4961F18, 0x58, 0x2D8C;
+	float death: 	0x494E5A0, 0x30,  0x2B0, 0x370, 0x2B8, 0x200;
+	int   world: 	0x4961F18, 0x58, 0x2D78;
+	int   menu:  	0x482C5E8, 0x308,  0x680, 0x298, 0x90, 0x108, 0xD8;
+	int   pause: 	0x49657E0, 0x118, 0x2B8;
+	int   finisher: 0x494E5A0, 0x30, 0x2B0, 0x350, 0x4F8, 0x388, 0x4DC;
+	int   boss: 	0x4961F20, 0xDE8, 0x2EB0;
+	float bosshp: 	0x49657E0, 0x118, 0x6B0, 0x468, 0x150, 0xE0, 0x10;
+}
+
+state("BPMGame-Win64-Shipping", "UNSUPPORTED")
+{
+
+}
+
 init
 {
+	Func<int, string> getVersion = (size) => {
+		switch(size) {
+			case 75317248: return "steam-release";
+			case 75321344: return "steam-patch1";
+			case 75427840: return "steam-patch2";
+			case 81747968: return "steam-patch3";
+			case 74993664: return "gog-release";
+			case 75001856: return "gog-patch1";
+			case 75096064: return "gog-patch2";
+			default: return "UNSUPPORTED";
+		}
+	};
 	print("Size: " + modules.First().ModuleMemorySize);
-	var versions = new Dictionary<int, string>() {
-			{75317248, "steam-release"}, 
-			{75321344, "steam-patch1"},
-			{75427840, "steam-patch2"},
-			{74993664, "GOG-release"},
-			{75001856, "GOG-patch1"},
-			{75096064, "GOG-patch2"}
-        };
 	
-	version = versions[modules.First().ModuleMemorySize];
+	version = getVersion(modules.First().ModuleMemorySize);
 	print("VERSION: " + version);
 	refreshRate = 30; //for load reduction
 }
@@ -156,31 +177,42 @@ update {
 	}
 	
 	LOGGER: {
+		string msg = "";
+		Func<string, string> log = (str) => msg += (str + '\n');
+		
+		if(start && settings["logger"]) {
+			log("Timing Mode: " + (settings["rta"] ? "RTA Loadless" : "IGT"));
+			log("Splitting Modes: \n" 
+				+ (settings["allChars"] ? "Multi-Character" : "Single Character") + "\n"
+				+ (settings["bossMode"] ? "Boss Split" : "World Split") + "\n"
+				+ (settings["practice"] ? "Practice Difficulty" : "Easy/Hard/Hellish Difficulty"));
+		}
+
 		if(settings["logvars"]) {
 			//logging for debuging
 			if(prevState != vars.timerState)
-				print("Timer State: " + STATE[vars.timerState]);
+				log("Timer State: " + STATE[vars.timerState]);
 			if(prevRefresh != refreshRate)
-				print("Refresh Rate: " + refreshRate + "hz");
+				log("Refresh Rate: " + refreshRate + "hz");
 			if(prevTimer != vars.timerValue)
-				print("Game Time: " + TimeSpan.FromSeconds(vars.timerValue).ToString());
+				log("Game Time: " + TimeSpan.FromSeconds(vars.timerValue).ToString());
 		}
 
 		if(settings["logstate"]) {
 			if(old.death != current.death)
-				print("Death Time: " + current.death);
+				log("Death Time: " + current.death);
 			if(old.world != current.world)
-				print("Current World: " + WORLD[current.world]);
+				log("Current World: " + WORLD[current.world]);
 			if(old.menu != current.menu)
-				print("Menu: " + current.menu);
+				log("Menu: " + current.menu);
 			if(old.pause != current.pause)
-				print("Pause: " + current.pause);
+				log("Pause: " + current.pause);
 			if(old.finisher != current.finisher)
-				print("Finisher Shot: " + current.finisher);
+				log("Finisher Shot: " + current.finisher);
 			if(old.boss != current.boss)
-				print("Boss Count: " + current.boss);
+				log("Boss Count: " + current.boss);
 			if(old.bosshp != current.bosshp)
-				print("Boss HP Bar: " + current.bosshp + "%");
+				log("Boss HP Bar: " + current.bosshp + "%");
 		}
 
 		if(settings["logtime"]) {
@@ -188,9 +220,11 @@ update {
 				|| (prevState != STOPPED && vars.timerState == STOPPED)
 				|| (prevState != RESET && vars.timerState == RESET)
 				|| (prevState != RUNNING && vars.timerState == RUNNING))
-				print("Current Time: " 
+				log("Current Time: " 
 					+ TimeSpan.FromSeconds(current.death > 0.0f ? current.death : current.timer).ToString());
 		}
+		if(settings["logger"] && msg != "")
+			print(msg);
 	}
 }
 
@@ -228,7 +262,7 @@ gameTime {
 }
 
 split {	
-	const int VANAHEIM_II = 3;
+	int VANAHEIM_II = (version.Contains("patch3") ? 4 : 3); //Needed in patch3+(possible conflict with older versions)
 	const int GULLVEIG = 5, NIDHOGG = 9;
 	Func<int, bool> isFinalShot = (shot) => current.finisher == shot && old.finisher == --shot;
 
