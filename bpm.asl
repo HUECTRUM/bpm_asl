@@ -1,87 +1,114 @@
-state("BPMGame-Win64-Shipping", "steam-release")
+state("BPMGame-Win64-Shipping", "steam-v0")
 {
 	float timer: 	0x43A68F8, 0x58,  0x1944;
 	int   world: 	0x4393F30, 0x268, 0x368;
 	int   menu:  	0x43D7340, 0x328, 0x108, 0x58;
+	int   death:    0;
+	int	  pause:	0;
+	int   boss: 	0;
+	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "GOG-release")
+state("BPMGame-Win64-Shipping", "GOG-v0")
 {
 	float timer: 	0x435B378, 0x58,  0x1944;
 	int   world: 	0x435B3A8, 0xDE8, 0x1930;
 	int   menu:  	0x438BDC0, 0x368, 0xA8, 0x58;
+	int   death:    0;
+	int	  pause:	0;
+	int   boss: 	0;
+	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "steam-patch1")
+state("BPMGame-Win64-Shipping", "steam-v1")
 {
 	float timer: 	0x43A7C78, 0x58,  0x1944;
 	float death: 	0x43952B0, 0x30,  0x50,  0x2B0, 0x370, 0x288, 0x160;
 	int   world: 	0x43952B0, 0x268, 0x368;
 	int   menu:  	0x43D86C0, 0x328, 0x108, 0x58;
-	int   finisher: 0x431FE68, 0x40, 0x240, 0x758, 0x4DC;
+	int	  pause:	0;
+	int   boss: 	0;
+	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "GOG-patch1")
+state("BPMGame-Win64-Shipping", "GOG-v1")
 {
 	float timer: 	0x435D768, 0xDE8, 0x1944;
 	float death: 	0x434AD70, 0x30,  0x2B0, 0x370, 0x288, 0x160;
 	int   world: 	0x435D738, 0x58,  0x1930;
 	int   menu:  	0x438E180, 0x368, 0x78, 0x68;
-	int   finisher: 0x42D5938, 0x20,  0x240, 0x758, 0x4DC;
+	int	  pause:	0;
+	int   boss: 	0;
+	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "steam-patch2")
+state("BPMGame-Win64-Shipping", "steam-v2")
 {
 	float timer: 	0x43BEEE8, 0xDE8, 0x2D5C;							//timer is at 0.0f on launch, is paused during loads and the pause menu, stops on victory and keeps running during death screen
 	float death: 	0x43AC4F0, 0x30,  0x2B0, 0x370, 0x288, 0x1C8;		//death time is 0.0f when a game starts and is set when it appears on the death screen
 	int   world: 	0x43AC4F0, 0x268, 0x3B0;							//world starts at 0 for asgard and increments by 1 for each level transition
 	int   menu:  	0x43F0CC8, 0x38,  0x138;							//menu is 1 in main menu, 0 when in game, in loading screen, in pause, in victory screen and in death screen
-	int   finisher: 0x43C2570, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;		//finisher starts at 0 from when a boss fight is initiated and increments by 1 on each finisher shot
 	int   pause: 	0x43BEEE8, 0x8B8;									//pause is 1 in pause menu, 0 in game, in loads, in main menu, in death screen and in victory screen
 	int   boss: 	0x43BEEE8, 0xDE8, 0x2E80;							//boss count starts at 0 when you start a game and increments by 1 for every boss and miniboss killed
 	float bosshp: 	0x43C2570, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;	//boss hp bar starts at 100.0f when you start a game, and decreases by (damage/max boss hp pool)x100 every shot. When it is <=0, boss finisher is initiated
 }
 
-state("BPMGame-Win64-Shipping", "GOG-patch2")
+state("BPMGame-Win64-Shipping", "GOG-v2")
 {
 	float timer: 	0x4374928, 0xDE8, 0x2D5C;
 	float death: 	0x4361F30, 0x30,  0x2B0, 0x370, 0x288, 0x1C8;
 	int   world: 	0x4361F30, 0x268, 0x3B0;
 	int   menu:  	0x43A6708, 0x38,  0x138;
 	int   pause: 	0x4374928, 0x8B8;
-	int   finisher: 0x4377FB0, 0x128, 0x6A8, 0x4C8, 0x358, 0x4DC;
 	int   boss: 	0x4374928, 0xDE8, 0x2E80;
 	float bosshp: 	0x4377FB0, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;
 }
 
-state("BPMGame-Win64-Shipping", "steam-patch3")
+state("BPMGame-Win64-Shipping", "steam-v3.0")
 {
 	float timer: 	0x4961F18, 0x58, 0x2D8C;
 	float death: 	0x494E5A0, 0x30,  0x2B0, 0x370, 0x2B8, 0x200;
 	int   world: 	0x4961F18, 0x58, 0x2D78;
 	int   menu:  	0x482C5E8, 0x308,  0x680, 0x298, 0x90, 0x108, 0xD8;
 	int   pause: 	0x49657E0, 0x118, 0x2B8;
-	int   finisher: 0x494E5A0, 0x30, 0x2B0, 0x350, 0x4F8, 0x388, 0x4DC;
 	int   boss: 	0x4961F20, 0xDE8, 0x2EB0;
 	float bosshp: 	0x49657E0, 0x118, 0x6B0, 0x468, 0x150, 0xE0, 0x10;
 }
 
+state("BPMGame-Win64-Shipping", "steam-v3.1")
+{
+	float timer: 	0x4964318, 0x58, 0x2D8C;
+	float death: 	0x49509A0, 0x30, 0x228, 0xE0, 0x2B0, 0x370, 0x2B8, 0x200;
+	int   world: 	0x49509A0, 0x290, 0x3B0;
+	int   menu:  	0x482E9E8, 0x308,  0x680, 0x298, 0x90, 0x118, 0xD8;
+	int   pause: 	0x4964320, 0x8A8;
+	int   boss: 	0x4967BE0, 0x180, 0x2EB0;
+	float bosshp: 	0x4967BE0, 0x118, 0x6B0, 0x468, 0x150, 0x140, 0xB0, 0x14;
+}
+
 state("BPMGame-Win64-Shipping", "UNSUPPORTED")
 {
-
+	float timer: 	0;
+	float death: 	0;
+	int   world: 	0;
+	int   menu:  	0;
+	int   pause: 	0;
+	int   boss: 	0;
+	float bosshp: 	0;
 }
 
 init
 {
 	Func<int, string> getVersion = (size) => {
 		switch(size) {
-			case 75317248: return "steam-release";
-			case 75321344: return "steam-patch1";
-			case 75427840: return "steam-patch2";
-			case 81747968: return "steam-patch3";
-			case 74993664: return "GOG-release";
-			case 75001856: return "GOG-patch1";
-			case 75096064: return "GOG-patch2";
+			case 75317248: return "steam-v0";
+			case 75321344: return "steam-v1";
+			case 75427840: return "steam-v2";
+			case 81747968: return "steam-v3.0";
+			case 81756160: return "steam-v3.1";
+			case 74993664: return "GOG-v0";
+			case 75001856: return "GOG-v1";
+			case 75096064: return "GOG-v2";
 			default: return "UNSUPPORTED";
 		}
 	};
@@ -90,9 +117,18 @@ init
 	version = getVersion(modules.First().ModuleMemorySize);
 	print("VERSION: " + version);
 	refreshRate = 30; //for load reduction
+	vars.patch = -1;
+
+	string[] versions = { "v0", "v1", "v2", "v3.0", "v3.1" };
+	for(int i = 0; i < versions.Length; i++) {
+		if(version.Contains(versions[i])){
+			vars.patch = float.Parse(versions[i].Substring(1));
+			print("Support Version: " + vars.patch);
+		}
+	}
 }
 
-startup {	
+startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
@@ -170,7 +206,7 @@ update {
 
 	MAIN: {	
 		vars.timerState = nextState(vars.timerState);
-		if(vars.timerState == RESET && !settings["rta"]) 
+		if(vars.timerState == RESET && !(settings["rta"] && vars.patch >= 2)) 
 			vars.timerValue = resetTimer();
 		if(vars.timerState == STOPPED)
 			refreshRate = updateRefreshRate();
@@ -207,8 +243,6 @@ update {
 				log("Menu: " + current.menu);
 			if(old.pause != current.pause)
 				log("Pause: " + current.pause);
-			if(old.finisher != current.finisher)
-				log("Finisher Shot: " + current.finisher);
 			if(old.boss != current.boss)
 				log("Boss Count: " + current.boss);
 			if(old.bosshp != current.bosshp)
@@ -236,20 +270,20 @@ start {
 isLoading {
 	const int STOPPED = 1, PAUSED = 4, RESET = 8;
 	//remove loads from RTA
-	return settings["rta"] 
+	return (settings["rta"] && vars.patch >= 2)
 		? ((vars.timerState & (STOPPED | PAUSED | RESET)) != 0 && current.pause == 0)
 		: true;
 }
 
 gameTime {
-	if(!settings["rta"]) {
+	if(!(settings["rta"] && vars.patch >= 2)) {
 		const int STOPPED = 1, RESET = 8;
 		
 		Func<int, double> stateToSeconds = (timerState) => {
 			switch(timerState)
 			{
 				case STOPPED:
-					return settings["allChars"] ? vars.timerValue : current.timer;
+					return (settings["allChars"] && vars.patch >= 1) ? vars.timerValue : current.timer;
 				case RESET:
 					return vars.timerValue;
 				default:
@@ -262,18 +296,23 @@ gameTime {
 }
 
 split {	
-	int VANAHEIM_II = (version.Contains("patch3") ? 4 : 3); //Needed in patch3+(possible conflict with older versions)
-	const int GULLVEIG = 5, NIDHOGG = 9;
-	Func<int, bool> isFinalShot = (shot) => current.finisher == shot && old.finisher == --shot;
+	const int STOPPED = 1, PAUSED = 4, RESET = 8;
+	const int ASGARD_I = 0, VANAHEIM_II = 3, HELHEIM_II = 7;
 
-	return (!settings["allChars"] && current.world == ++old.world)	//removed "worldSplit" option and made it default behavior if multi-character mode is disabled
-		|| (settings["bossMode"] && current.boss == ++old.boss && current.bosshp <= 0)	//bosshp is the health bar value, otherwise the boss counter increments on cloned bosses
-		|| (settings["practice"] && old.world == VANAHEIM_II && isFinalShot(GULLVEIG))	//checking for vanaheim 2 on practice difficulty works
-		|| isFinalShot(NIDHOGG);	//checking for helheim 2 is unreliable, nidhogg is the only boss whose finisher is 9 shots
+	bool worldSplit = !(settings["allChars"] && vars.patch >= 1) && current.world == ++old.world;
+
+	bool bossSplit = settings["bossMode"] && vars.patch >= 2 //bosshp is the health bar value, otherwise the boss counter increments on cloned bosses
+		&& current.boss == ++old.boss && current.bosshp <= 0;
+
+	bool finalSplit = // apparently this method works on gog, I think maybe the `current.menu == 0` may have been what was throwing it off previously?
+		old.world == ((settings["practice"] && vars.patch >= 2) ? VANAHEIM_II : HELHEIM_II)
+			&& current.world == ASGARD_I;
+
+	return worldSplit || bossSplit || finalSplit;
 }
 
 reset {
 	const int RESET = 8;
-	return !(settings["allChars"] && timer.CurrentSplitIndex > 0) //check if not on first character
+	return !(settings["allChars"] && vars.patch >= 1 && timer.CurrentSplitIndex > 0) //check if not on first character
 			&& vars.timerState == RESET;
 }
