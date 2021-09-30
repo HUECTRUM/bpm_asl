@@ -1,4 +1,4 @@
-state("BPMGame-Win64-Shipping", "steam-v0")
+state("BPMGame-Win64-Shipping", "steam-v0.0")
 {
 	float timer: 	0x43A68F8, 0x58,  0x1944;
 	int   world: 	0x4393F30, 0x268, 0x368;
@@ -9,7 +9,7 @@ state("BPMGame-Win64-Shipping", "steam-v0")
 	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "GOG-v0")
+state("BPMGame-Win64-Shipping", "GOG-v0.0")
 {
 	float timer: 	0x435B378, 0x58,  0x1944;
 	int   world: 	0x435B3A8, 0xDE8, 0x1930;
@@ -20,7 +20,7 @@ state("BPMGame-Win64-Shipping", "GOG-v0")
 	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "steam-v1")
+state("BPMGame-Win64-Shipping", "steam-v1.0")
 {
 	float timer: 	0x43A7C78, 0x58,  0x1944;
 	float death: 	0x43952B0, 0x30,  0x50,  0x2B0, 0x370, 0x288, 0x160;
@@ -31,7 +31,7 @@ state("BPMGame-Win64-Shipping", "steam-v1")
 	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "GOG-v1")
+state("BPMGame-Win64-Shipping", "GOG-v1.0")
 {
 	float timer: 	0x435D768, 0xDE8, 0x1944;
 	float death: 	0x434AD70, 0x30,  0x2B0, 0x370, 0x288, 0x160;
@@ -42,7 +42,7 @@ state("BPMGame-Win64-Shipping", "GOG-v1")
 	float bosshp: 	0;
 }
 
-state("BPMGame-Win64-Shipping", "steam-v2")
+state("BPMGame-Win64-Shipping", "steam-v2.0")
 {
 	float timer: 	0x43BEEE8, 0xDE8, 0x2D5C;							//timer is at 0.0f on launch, is paused during loads and the pause menu, stops on victory and keeps running during death screen
 	float death: 	0x43AC4F0, 0x30,  0x2B0, 0x370, 0x288, 0x1C8;		//death time is 0.0f when a game starts and is set when it appears on the death screen
@@ -53,7 +53,7 @@ state("BPMGame-Win64-Shipping", "steam-v2")
 	float bosshp: 	0x43C2570, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;	//boss hp bar starts at 100.0f when you start a game, and decreases by (damage/max boss hp pool)x100 every shot. When it is <=0, boss finisher is initiated
 }
 
-state("BPMGame-Win64-Shipping", "GOG-v2")
+state("BPMGame-Win64-Shipping", "GOG-v2.0")
 {
 	float timer: 	0x4374928, 0xDE8, 0x2D5C;
 	float death: 	0x4361F30, 0x30,  0x2B0, 0x370, 0x288, 0x1C8;
@@ -101,14 +101,14 @@ init
 {
 	Func<int, string> getVersion = (size) => {
 		switch(size) {
-			case 75317248: return "steam-v0";
-			case 75321344: return "steam-v1";
-			case 75427840: return "steam-v2";
+			case 75317248: return "steam-v0.0";
+			case 75321344: return "steam-v1.0";
+			case 75427840: return "steam-v2.0";
 			case 81747968: return "steam-v3.0";
 			case 81756160: return "steam-v3.1";
-			case 74993664: return "GOG-v0";
-			case 75001856: return "GOG-v1";
-			case 75096064: return "GOG-v2";
+			case 74993664: return "GOG-v0.0";
+			case 75001856: return "GOG-v1.0";
+			case 75096064: return "GOG-v2.0";
 			default: return "UNSUPPORTED";
 		}
 	};
@@ -119,7 +119,7 @@ init
 	refreshRate = 30; //for load reduction
 	vars.patch = -1;
 
-	string[] versions = { "v0", "v1", "v2", "v3.0", "v3.1" };
+	string[] versions = { "v0.0", "v1.0", "v2.0", "v3.0", "v3.1" };
 	for(int i = 0; i < versions.Length; i++) {
 		if(version.Contains(versions[i])){
 			vars.patch = float.Parse(versions[i].Substring(1));
@@ -151,6 +151,11 @@ startup {
 	settings.Add("logvars", false, "Log variable changes to console.", "logger");
 	settings.Add("logstate", false, "Log state value changes to console.", "logger");
 	settings.Add("logtime", false, "Log current game time(on state change) to console.", "logger");
+
+	settings.SetToolTip("allChars", "Supported for versions 1.0+");
+	settings.SetToolTip("bossMode", "Supported for versions 2.0+");
+	settings.SetToolTip("practice", "Supported for versions 2.0+");
+	settings.SetToolTip("rta", "Supported for versions 2.0+");
 
 	timer.OnReset += (s,e) => { //needed for manual restarts, no way to remove anonymous event handlers on script shutdown, so this isn't ideal
 		vars.timerValue = 0.0f;
