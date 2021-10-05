@@ -2,7 +2,6 @@ state("BPMGame-Win64-Shipping", "steam-v0.0")
 {
 	float timer: 	0x43A68F8, 0x58,  0x1944;
 	int   world: 	0x4393F30, 0x268, 0x368;
-	int   menu:  	0x43D7340, 0x328, 0x108, 0x58;
 	int   death:    0;
 	int	  pause:	0;
 	int   boss: 	0;
@@ -13,7 +12,6 @@ state("BPMGame-Win64-Shipping", "GOG-v0.0")
 {
 	float timer: 	0x435B378, 0x58,  0x1944;
 	int   world: 	0x435B3A8, 0xDE8, 0x1930;
-	int   menu:  	0x438BDC0, 0x368, 0xA8, 0x58;
 	int   death:    0;
 	int	  pause:	0;
 	int   boss: 	0;
@@ -25,7 +23,6 @@ state("BPMGame-Win64-Shipping", "steam-v1.0")
 	float timer: 	0x43A7C78, 0x58,  0x1944;
 	float death: 	0x43952B0, 0x30,  0x50,  0x2B0, 0x370, 0x288, 0x160;
 	int   world: 	0x43952B0, 0x268, 0x368;
-	int   menu:  	0x43D86C0, 0x328, 0x108, 0x58;
 	int	  pause:	0;
 	int   boss: 	0;
 	float bosshp: 	0;
@@ -36,7 +33,6 @@ state("BPMGame-Win64-Shipping", "GOG-v1.0")
 	float timer: 	0x435D768, 0xDE8, 0x1944;
 	float death: 	0x434AD70, 0x30,  0x2B0, 0x370, 0x288, 0x160;
 	int   world: 	0x435D738, 0x58,  0x1930;
-	int   menu:  	0x438E180, 0x368, 0x78, 0x68;
 	int	  pause:	0;
 	int   boss: 	0;
 	float bosshp: 	0;
@@ -47,7 +43,6 @@ state("BPMGame-Win64-Shipping", "steam-v2.0")
 	float timer: 	0x43BEEE8, 0xDE8, 0x2D5C;							//timer is at 0.0f on launch, is paused during loads and the pause menu, stops on victory and keeps running during death screen
 	float death: 	0x43AC4F0, 0x30,  0x2B0, 0x370, 0x288, 0x1C8;		//death time is 0.0f when a game starts and is set when it appears on the death screen
 	int   world: 	0x43AC4F0, 0x268, 0x3B0;							//world starts at 0 for asgard and increments by 1 for each level transition
-	int   menu:  	0x43F0CC8, 0x38,  0x138;							//menu is 1 in main menu, 0 when in game, in loading screen, in pause, in victory screen and in death screen
 	int   pause: 	0x43BEEE8, 0x8B8;									//pause is 1 in pause menu, 0 in game, in loads, in main menu, in death screen and in victory screen
 	int   boss: 	0x43BEEE8, 0xDE8, 0x2E80;							//boss count starts at 0 when you start a game and increments by 1 for every boss and miniboss killed
 	float bosshp: 	0x43C2570, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;	//boss hp bar starts at 100.0f when you start a game, and decreases by (damage/max boss hp pool)x100 every shot. When it is <=0, boss finisher is initiated
@@ -58,7 +53,6 @@ state("BPMGame-Win64-Shipping", "GOG-v2.0")
 	float timer: 	0x4374928, 0xDE8, 0x2D5C;
 	float death: 	0x4361F30, 0x30,  0x2B0, 0x370, 0x288, 0x1C8;
 	int   world: 	0x4361F30, 0x268, 0x3B0;
-	int   menu:  	0x43A6708, 0x38,  0x138;
 	int   pause: 	0x4374928, 0x8B8;
 	int   boss: 	0x4374928, 0xDE8, 0x2E80;
 	float bosshp: 	0x4377FB0, 0x128, 0x6A8, 0x438, 0x150, 0xE0, 0x10;
@@ -69,18 +63,16 @@ state("BPMGame-Win64-Shipping", "steam-v3.0")
 	float timer: 	0x4961F18, 0x58, 0x2D8C;
 	float death: 	0x494E5A0, 0x30,  0x2B0, 0x370, 0x2B8, 0x200;
 	int   world: 	0x4961F18, 0x58, 0x2D78;
-	int   menu:  	0x482C5E8, 0x308,  0x680, 0x298, 0x90, 0x108, 0xD8;
 	int   pause: 	0x49657E0, 0x118, 0x2B8;
 	int   boss: 	0x4961F20, 0xDE8, 0x2EB0;
 	float bosshp: 	0x49657E0, 0x118, 0x6B0, 0x468, 0x150, 0xE0, 0x10;
 }
 
-state("BPMGame-Win64-Shipping", "steam-v3.1")
+state("BPMGame-Win64-Shipping", "steam-v3.1-3.2")
 {
 	float timer: 	0x4964318, 0x58, 0x2D8C;
 	float death: 	0x49509A0, 0x30, 0x228, 0xE0, 0x2B0, 0x370, 0x2B8, 0x200;
 	int   world: 	0x49509A0, 0x290, 0x3B0;
-	int   menu:  	0x482E9E8, 0x308,  0x680, 0x298, 0x90, 0x118, 0xD8;
 	int   pause: 	0x4964320, 0x8A8;
 	int   boss: 	0x4967BE0, 0x180, 0x2EB0;
 	float bosshp: 	0x4967BE0, 0x118, 0x6B0, 0x468, 0x150, 0x140, 0xB0, 0x14;
@@ -91,7 +83,6 @@ state("BPMGame-Win64-Shipping", "UNSUPPORTED")
 	float timer: 	0;
 	float death: 	0;
 	int   world: 	0;
-	int   menu:  	0;
 	int   pause: 	0;
 	int   boss: 	0;
 	float bosshp: 	0;
@@ -105,7 +96,7 @@ init
 			case 75321344: return "steam-v1.0";
 			case 75427840: return "steam-v2.0";
 			case 81747968: return "steam-v3.0";
-			case 81756160: return "steam-v3.1";
+			case 81756160: return "steam-v3.1-3.2";
 			case 74993664: return "GOG-v0.0";
 			case 75001856: return "GOG-v1.0";
 			case 75096064: return "GOG-v2.0";
@@ -132,10 +123,8 @@ startup {
 	vars.timerValue = 0.0f;
 	vars.timerState = 0;
 
-	// settings.Add("worldSplit", true, "Split on level transition."); //moved to top since this defaults to true
 	settings.Add("allChars", false, "Multi-Character Mode. Auto-reset is disabled after the first character.");
 	settings.Add("bossMode", false, "Boss Rush Mode. Splits on boss death.");
-	settings.Add("practice", false, "Practice Difficulty Mode. Splits on Gullveig death.");
 	settings.Add("experimental", false, "Experimental options. ONLY FOR TESTING PURPOSES.");
 	settings.Add("altTiming", false, "Switch to an alternate timing method.", "experimental");
 	settings.Add("rta", false, "RTA Loadless timing.", "altTiming");
@@ -154,7 +143,6 @@ startup {
 
 	settings.SetToolTip("allChars", "Supported for versions 1.0+");
 	settings.SetToolTip("bossMode", "Supported for versions 2.0+");
-	settings.SetToolTip("practice", "Supported for versions 2.0+");
 	settings.SetToolTip("rta", "Supported for versions 2.0+");
 
 	timer.OnReset += (s,e) => { //needed for manual restarts, no way to remove anonymous event handlers on script shutdown, so this isn't ideal
@@ -179,7 +167,13 @@ update {
 
 	bool start = current.timer > 0.0f && old.timer == 0.0f;
 	bool paused = current.pause == 1;
-	bool mainmenu = current.menu == 1;
+	bool loading = t_eq_t0 && !paused;
+	bool restart = t_eq_0 && t_lt_t0;
+	bool resume = t_gt_t0;
+	
+	bool bMultiCharacterMode = settings["allChars"] && vars.patch >= 1;
+	bool bRTALoadlessTiming = settings["rta"] && vars.patch >= 2;
+	bool bBossMode = settings["bossMode"] && vars.patch >= 2;
 	
 	Func<int, int> nextState = (timerState) => {
 		switch(timerState)
@@ -187,16 +181,16 @@ update {
 			case STOPPED:
 				return (start && alive) ? RUNNING : STOPPED;
 			case RUNNING:
-				if (paused || t_eq_t0) return PAUSED;
-				return ((t_eq_0 && t_lt_t0) || death) ? RESET : RUNNING;
+				if (paused || loading) return PAUSED;
+				return (restart || death) ? RESET : RUNNING;
 			case PAUSED:
-				if (t_gt_t0) return RUNNING;
-				return ((t_eq_0 && t_lt_t0) || mainmenu) ? RESET : PAUSED;
+				if (resume) return RUNNING;
+				return (restart) ? RESET : PAUSED;
 			default:
 				return STOPPED;
 		}
 	};
-	Func<double> resetTimer = () => (settings["allChars"] && timer.CurrentSplitIndex > 0)
+	Func<double> resetTimer = () => (bMultiCharacterMode && timer.CurrentSplitIndex > 0)
 			? vars.timerValue + (alive ? old.timer : current.death)
 			: 0.0f;
 	Func<double> updateRefreshRate = () => settings["60hz"] ? 60
@@ -211,7 +205,7 @@ update {
 
 	MAIN: {	
 		vars.timerState = nextState(vars.timerState);
-		if(vars.timerState == RESET && !(settings["rta"] && vars.patch >= 2)) 
+		if(vars.timerState == RESET && !bRTALoadlessTiming) 
 			vars.timerValue = resetTimer();
 		if(vars.timerState == STOPPED)
 			refreshRate = updateRefreshRate();
@@ -222,11 +216,10 @@ update {
 		Func<string, string> log = (str) => msg += (str + '\n');
 		
 		if(start && settings["logger"]) {
-			log("Timing Mode: " + (settings["rta"] ? "RTA Loadless" : "IGT"));
+			log("Timing Mode: " + (bRTALoadlessTiming ? "RTA Loadless" : "IGT"));
 			log("Splitting Modes: \n" 
-				+ (settings["allChars"] ? "Multi-Character" : "Single Character") + "\n"
-				+ (settings["bossMode"] ? "Boss Split" : "World Split") + "\n"
-				+ (settings["practice"] ? "Practice Difficulty" : "Easy/Hard/Hellish Difficulty"));
+				+ (bMultiCharacterMode ? "Multi-Character" : "Single Character") + "\n"
+				+ (bBossMode ? "Boss Split" : "World Split") + "\n");
 		}
 
 		if(settings["logvars"]) {
@@ -244,13 +237,11 @@ update {
 				log("Death Time: " + current.death);
 			if(old.world != current.world)
 				log("Current World: " + WORLD[current.world]);
-			if(old.menu != current.menu)
-				log("Menu: " + current.menu);
 			if(old.pause != current.pause)
 				log("Pause: " + current.pause);
 			if(old.boss != current.boss)
 				log("Boss Count: " + current.boss);
-			if(old.bosshp != current.bosshp)
+			if(old.bosshp != current.bosshp && (current.bosshp == 100.0 || current.bosshp <= 0.0))
 				log("Boss HP Bar: " + current.bosshp + "%");
 		}
 
@@ -260,7 +251,7 @@ update {
 				|| (prevState != RESET && vars.timerState == RESET)
 				|| (prevState != RUNNING && vars.timerState == RUNNING))
 				log("Current Time: " 
-					+ TimeSpan.FromSeconds(current.death > 0.0f ? current.death : current.timer).ToString());
+					+ TimeSpan.FromSeconds(!alive ? current.death : current.timer).ToString());
 		}
 		if(settings["logger"] && msg != "")
 			print(msg);
@@ -283,12 +274,13 @@ isLoading {
 gameTime {
 	if(!(settings["rta"] && vars.patch >= 2)) {
 		const int STOPPED = 1, RESET = 8;
+		bool bMultiCharacterMode = settings["allChars"] && vars.patch >= 1;
 		
 		Func<int, double> stateToSeconds = (timerState) => {
 			switch(timerState)
 			{
 				case STOPPED:
-					return (settings["allChars"] && vars.patch >= 1) ? vars.timerValue : current.timer;
+					return bMultiCharacterMode ? vars.timerValue : current.timer;
 				case RESET:
 					return vars.timerValue;
 				default:
@@ -304,16 +296,16 @@ split {
 	const int STOPPED = 1, PAUSED = 4, RESET = 8;
 	const int ASGARD_I = 0, VANAHEIM_II = 3, HELHEIM_II = 7;
 
-	bool worldSplit = !(settings["allChars"] && vars.patch >= 1) && current.world == ++old.world;
+	bool worldSplit = current.world != old.world;
+	bool bossSplit = current.boss == ++old.boss && current.bosshp <= 0;
+	bool charSplit = worldSplit && current.world == ASGARD_I;
 
-	bool bossSplit = settings["bossMode"] && vars.patch >= 2 //bosshp is the health bar value, otherwise the boss counter increments on cloned bosses
-		&& current.boss == ++old.boss && current.bosshp <= 0;
+	bool bMultiCharacterMode = settings["allChars"] && vars.patch >= 1;
+	bool bBossMode = settings["bossMode"] && vars.patch >= 2;
 
-	bool finalSplit = // apparently this method works on gog, I think maybe the `current.menu == 0` may have been what was throwing it off previously?
-		old.world == ((settings["practice"] && vars.patch >= 2) ? VANAHEIM_II : HELHEIM_II)
-			&& current.world == ASGARD_I;
-
-	return worldSplit || bossSplit || finalSplit;
+	return (!bMultiCharacterMode && !bBossMode && worldSplit)
+			|| (bBossMode && bossSplit)
+			|| (bMultiCharacterMode && charSplit);
 }
 
 reset {
