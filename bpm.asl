@@ -68,7 +68,7 @@ state("BPMGame-Win64-Shipping", "steam-v3.0")
 	float bosshp: 	0x49657E0, 0x118, 0x6B0, 0x468, 0x150, 0xE0, 0x10;
 }
 
-state("BPMGame-Win64-Shipping", "steam-v3.1-3.2")
+state("BPMGame-Win64-Shipping", "v3.1-3.2")
 {
 	float timer: 	0x4964318, 0x58, 0x2D8C;
 	float death: 	0x49509A0, 0x30, 0x228, 0xE0, 0x2B0, 0x370, 0x2B8, 0x200;
@@ -96,10 +96,10 @@ init
 			case 75321344: return "steam-v1.0";
 			case 75427840: return "steam-v2.0";
 			case 81747968: return "steam-v3.0";
-			case 81756160: return "steam-v3.1-3.2";
 			case 74993664: return "GOG-v0.0";
 			case 75001856: return "GOG-v1.0";
 			case 75096064: return "GOG-v2.0";
+			case 81756160: return "v3.1-3.2";
 			default: return "UNSUPPORTED";
 		}
 	};
